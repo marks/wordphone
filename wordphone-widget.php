@@ -207,7 +207,7 @@ class WordPhone_Voice extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'connect_to' ); ?>"><?php _e('Connect To:'); ?></label>
 			<input id="<?php echo $this->get_field_id( 'connect_to' ); ?>" name="<?php echo $this->get_field_name( 'connect_to' ); ?>" value="<?php echo $instance['connect_to']; ?>" style="width:100%;" />
-			<small>This should be a SIP URI (sip:9991456769@sip.tropo.com), Voxeo App ID (app:9991456769), or 10-digit phone number (calls will be limited to 10 minutes. Free calling provided by <a href="http://www.tropo.com">Tropo.com</a></small>
+			<small>This should be a SIP URI (sip:9991456769@sip.tropo.com), Voxeo App ID (app:9991456769), or 10-digit phone number (calls will be limited to 10 minutes). Free calling provided by <a href="http://www.tropo.com">Tropo.com</a></small>
 		</p>
 		
 		<h4 style="text-decoration:underline;" >Optional Fields</h4>
