@@ -29,7 +29,7 @@ function wordphone_load_widgets() {
   wp_deregister_script( 'jquery' );
   wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js', false, '1.4.3');
 	// Make sure that jQuery and the Phono (included in the widget zip file) scripts are included on the page.
-	wp_enqueue_script('phono', WP_PLUGIN_URL . '/wordphone/jquery.phono.js', array('jquery'), '0.1' );
+	wp_enqueue_script('phono', WP_PLUGIN_URL . '/WordPhone/jquery.phono.js', array('jquery'), '0.1' );
 }
 
 /**
@@ -60,7 +60,8 @@ class WordPhone_Voice extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 		extract( $args );
-
+		$wid = $args['widget_id'];
+		
 		/* Our variables from the widget settings. */
 		$title = apply_filters('widget_title', $instance['title'] );
 		$api_key = $instance['api_key'];
@@ -77,39 +78,39 @@ class WordPhone_Voice extends WP_Widget {
 			echo $before_title . $title . $after_title;
 
 		if ( !empty($user_description) )
-			echo "<span id='user-description'>".$user_description."</span>";
+			echo "<span class='user-description'>".$user_description."</span>";
 
-		echo "<input id='call-button' type='button' disabled='true' value='Loading...' /><span id='status'></span>";
+		echo "<input class='call-button' type='button' disabled='true' value='Loading...' /><span class='status'></span>";
 
-		echo "<div id='call-controls' style='padding:5px;'>";
+		echo "<div class='call-controls' style='padding:5px;'>";
 		
 		if ( $show_keypad )
 			echo "
 				<table width=\"110px\">
 					<tr>
-						<td><input id='digit-1' type='button' onclick=\"call.digit('1');\" value='1' /></td>
-						<td><input id='digit-2' type='button' onclick=\"call.digit('2');\" value='2' /></td>
-						<td><input id='digit-3' type='button' onclick=\"call.digit('3');\" value='3' /></td>
+						<td><input class='digit-1' type='button' onclick=\"calls['".$wid."'].digit('1');\" value='1' /></td>
+						<td><input class='digit-2' type='button' onclick=\"calls['".$wid."'].digit('2');\" value='2' /></td>
+						<td><input class='digit-3' type='button' onclick=\"calls['".$wid."'].digit('3');\" value='3' /></td>
 					</tr>
 					<tr>
-						<td><input id='digit-4' type='button' onclick=\"call.digit('4');\" value='4' /></td>
-						<td><input id='digit-5' type='button' onclick=\"call.digit('5');\" value='5' /></td>
-						<td><input id='digit-6' type='button' onclick=\"call.digit('6');\" value='6' /></td>
+						<td><input class='digit-4' type='button' onclick=\"calls['".$wid."'].digit('4');\" value='4' /></td>
+						<td><input class='digit-5' type='button' onclick=\"calls['".$wid."'].digit('5');\" value='5' /></td>
+						<td><input class='digit-6' type='button' onclick=\"calls['".$wid."'].digit('6');\" value='6' /></td>
 					</tr>
 					<tr>
-						<td><input id='digit-7' type='button' onclick=\"call.digit('7');\" value='7' /></td>
-						<td><input id='digit-8' type='button' onclick=\"call.digit('8');\" value='8' /></td>
-						<td><input id='digit-9' type='button' onclick=\"call.digit('9');\" value='9' /></td>
+						<td><input class='digit-7' type='button' onclick=\"calls['".$wid."'].digit('7');\" value='7' /></td>
+						<td><input class='digit-8' type='button' onclick=\"calls['".$wid."'].digit('8');\" value='8' /></td>
+						<td><input class='digit-9' type='button' onclick=\"calls['".$wid."'].digit('9');\" value='9' /></td>
 					</tr>
 					<tr>
-						<td><input id='digit-star'  type='button' onclick=\"call.digit('*');\" value='*' /></td>
-						<td><input id='digit-0' 	  type='button' onclick=\"call.digit('0');\" value='0' /></td>
-						<td><input id='digit-pound' type='button' onclick=\"call.digit('#');\" value='#' /></td>
+						<td><input class='digit-star'  type='button' onclick=\"calls['".$wid."'].digit('*');\" value='*' /></td>
+						<td><input class='digit-0' 	   type='button' onclick=\"calls['".$wid."'].digit('0');\" value='0' /></td>
+						<td><input class='digit-pound' type='button' onclick=\"calls['".$wid."'].digit('#');\" value='#' /></td>
 					</tr>
 				</table>";
 
 		// Hangup button inside #call-controls.
-		echo "<input style='width: 100px;' id='hangup-button' type='button' onclick=\"call.hangup();\" value='Hangup' /></td>";
+		echo "<input style='width: 100px;' class='hangup-button' type='button' onclick=\"calls['".$wid."'].hangup();\" value='Hangup' /></td>";
 		
 		// Close #call-controls div
 		echo "</div>";
@@ -117,33 +118,35 @@ class WordPhone_Voice extends WP_Widget {
 		// Phono Javascript initialization and calling code.
 		echo "
 	    <script>
-				$(\"#call-controls\").hide();
-	      var phono = $.phono({
-					apiKey: \"".$api_key."\",
+				if(typeof(phonos) == 'undefined'){ var phonos = new Array(); }
+				if(typeof(calls) == 'undefined'){ var calls = new Array(); }
+					
+				$('#".$wid." .call-controls').hide();
+	      phonos['".$wid."'] = $.phono({
+					apiKey: '".$api_key."',
 	        onReady: function() {
-	          $(\"#call-button\").attr(\"disabled\", false).val(\"".$button_text."\");
+	          $('#".$wid." .call-button').attr('disabled', false).val('".$button_text."');
 	        }
 	      });
 				
-				var call;
-				$(\"#call-button\").click(function() {
-				  $(\"#call-button\").attr(\"disabled\", true).val(\"Busy\");
-				  call = phono.phone.dial(\"".$connect_to."\", {
+				$('#".$wid." .call-button').click(function() {
+				  $('#".$wid." .call-button').attr('disabled', true).val('Busy');
+				  calls['".$wid."'] = phonos['".$wid."'].phone.dial('".$connect_to."', {
 				    onRing: function() {
-				      $(\"#status\").html(\"Ringing\");
-							$(\"#call-controls input\").attr(\"disabled\",true);
-							$(\"#hangup-button\").attr(\"disabled\",false);
-							$(\"#call-controls\").show().fadeIn();
+				      $('#".$wid." .status').html('Ringing');
+							$('#".$wid." .call-controls input').attr('disabled',true);
+							$('#".$wid." .hangup-button').attr('disabled',false);
+							$('#".$wid." .call-controls').show().fadeIn();
 				    },
 				    onAnswer: function() {
-				      $(\"#status\").html(\"Answered\").show().fadeIn();
-							$(\"#call-controls input\").attr(\"disabled\",false);
+				      $('#".$wid." .status').html('Answered').show().fadeIn();
+							$('#".$wid." .call-controls input').attr('disabled',false);
 				    },
 				    onHangup: function() {
-				      $(\"#call-button\").attr(\"disabled\", false).val(\"Call\");
-				      $(\"#status\").html(\"Call has ended\");
-							$(\"#call-controls input\").attr(\"disabled\",true);
-							$(\"#call-controls\").fadeOut();
+		          $('#".$wid." .call-button').attr('disabled', false).val('".$button_text."');
+				      $('#".$wid." .status').html('Call has ended');
+							$('#".$wid." .call-controls input').attr('disabled',true);
+							$('#".$wid." .call-controls').fadeOut();
 				    }
 				  });
 				});
