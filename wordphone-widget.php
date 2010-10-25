@@ -66,7 +66,7 @@ class WordPhone_Voice extends WP_Widget {
 		$title = apply_filters('widget_title', $instance['title'] );
 		$api_key = $instance['api_key'];
 		$connect_to = $instance['connect_to'];
-		$user_description = $instance['user_description'];
+		$user_instructions = $instance['user_instructions'];
 		$show_keypad = isset( $instance['show_keypad'] ) ? $instance['show_keypad'] : false;
 		$button_text = !empty($instance['button_text']) ? $instance['button_text'] : "Call";
 		
@@ -77,8 +77,8 @@ class WordPhone_Voice extends WP_Widget {
 		if ( $title )
 			echo $before_title . $title . $after_title;
 
-		if ( !empty($user_description) )
-			echo "<span class='user-description'>".$user_description."</span>";
+		if ( !empty($user_instructions) )
+			echo "<span class='user-instructions'>".$user_instructions."</span><br />";
 
 		echo "<input class='call-button' type='button' disabled='true' value='Loading...' /><span class='status'></span>";
 
@@ -163,7 +163,7 @@ class WordPhone_Voice extends WP_Widget {
 
 		/* Strip tags for text inputs. */
 		$instance['title'] = strip_tags( $new_instance['title'] );
-		$instance['description'] = strip_tags( $new_instance['description'] );
+		$instance['user_instructions'] = strip_tags( $new_instance['user_instructions'] );
 		$instance['api_key'] = strip_tags( $new_instance['api_key'] );
 		$instance['button_text'] = strip_tags( $new_instance['button_text'] );
 		$instance['connect_to'] = strip_tags( $new_instance['connect_to'] );
