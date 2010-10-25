@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WordPhone Widget
- * Plugin URI: http://URL_GOES_HERE
+ * Plugin URI: http://github.com/marks/WordPhone
  * Description: A widget that allows you to embed a Phono(.com) phone on your blog.
  *							Uses HTML and Flash to let your users make free calls to you and/or your Tropo(.com) application.
  * Version: 0.1
