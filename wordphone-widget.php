@@ -60,7 +60,7 @@ class WordPhone_Voice extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 		extract( $args );
-		$wid = $args['widget_id'];
+		$wid = $args['widget_id']."_div";
 		
 		/* Our variables from the widget settings. */
 		$title = apply_filters('widget_title', $instance['title'] );
@@ -79,7 +79,8 @@ class WordPhone_Voice extends WP_Widget {
 
 		if ( !empty($user_instructions) )
 			echo "<span class='user-instructions'>".$user_instructions."</span><br />";
-
+		
+		echo "<div id='".$wid."'>";
 		echo "<input class='call-button' type='button' disabled='true' value='Loading...' /><span class='status'></span>";
 
 		echo "<div class='call-controls' style='padding:5px;'>";
@@ -151,6 +152,7 @@ class WordPhone_Voice extends WP_Widget {
 				  });
 				});
 	    </script>";
+		echo "</div>";
 
 		echo $after_widget;
 	}
