@@ -18,9 +18,9 @@ The widget is skinnable so that you can make it fit with your theme and site.
 
 == Installation ==
 
-[See installation instructions on this plugin's wiki page](http://github.com/marks/WordPhone/wiki "WordPhone plugin wiki")
+[See installation instructions on this plugin's wiki page.](http://github.com/marks/WordPhone/wiki "WordPhone plugin wiki")
 
 
 == Problems? ==
 
-If you run into any issues with this plugin, please [look at existing issues or raise a new issue](http://github.com/marks/WordPhone/issues "WordPhone plugin issues")
+If you run into any issues with this plugin, please [look at existing issues or raise a new issue](http://github.com/marks/WordPhone/issues "WordPhone plugin issues").
