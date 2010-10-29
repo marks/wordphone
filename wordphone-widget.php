@@ -29,7 +29,7 @@ function wordphone_load_widgets() {
   wp_deregister_script( 'jquery' );
   wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js', false, '1.4.3');
 	// Make sure that jQuery and the Phono (included in the widget zip file) scripts are included on the page.
-	wp_enqueue_script('phono', WP_PLUGIN_URL . '/WordPhone/jquery.phono.js', array('jquery'), '0.1' );
+	wp_enqueue_script('phono', WP_PLUGIN_URL . '/wordphone/jquery.phono.js', array('jquery'), '0.1' );
 }
 
 /**
