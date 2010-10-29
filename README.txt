@@ -1,7 +1,7 @@
 === WordPhone ===
 Contributors: skramx
 Tags: phone, voip, sip, tropo, phono, communications
-Donate link: http://github.com/marks/wordphone
+Donate link: http://github.com/marks/wordphone 
 Requires at least: 2.8
 Tested up to: 3.0.1
 Stable tag: trunk
