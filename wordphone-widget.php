@@ -70,6 +70,8 @@ class WordPhone_Voice extends WP_Widget {
 		$show_keypad = isset( $instance['show_keypad'] ) ? $instance['show_keypad'] : false;
 		$button_text = !empty($instance['button_text']) ? $instance['button_text'] : "Call";
 		
+		echo "<script type='text/javascript'>try{jQuery.noConflict();}catch(e){};</script>\n";
+
 		/* Before widget (defined by themes). */
 		echo $before_widget;
 
@@ -82,7 +84,6 @@ class WordPhone_Voice extends WP_Widget {
 		
 		echo "<div id='".$wid."'>";
 		echo "<input class='call-button' type='button' disabled='true' value='Loading...' /><span class='status'></span>";
-
 		echo "<div class='call-controls' style='padding:5px;'>";
 		
 		if ( $show_keypad )
@@ -119,35 +120,43 @@ class WordPhone_Voice extends WP_Widget {
 		// Phono Javascript initialization and calling code.
 		echo "
 	    <script>
+				var $ = jQuery.noConflict(); // this is needed for Phono to work; it doesn't support jQuery.noConflict() from what I can tell
+				
+				// create an array of phonos and calls if they aren't initialized already by a prior Phono widget
 				if(typeof(phonos) == 'undefined'){ var phonos = new Array(); }
 				if(typeof(calls) == 'undefined'){ var calls = new Array(); }
-					
-				$('#".$wid." .call-controls').hide();
-	      phonos['".$wid."'] = $.phono({
+				
+				jQuery('#".$wid." .call-controls').hide();
+	      phonos['".$wid."'] = jQuery.phono({
 					apiKey: '".$api_key."',
 	        onReady: function() {
-	          $('#".$wid." .call-button').attr('disabled', false).val('".$button_text."');
-	        }
-	      });
+	          jQuery('#".$wid." .call-button').attr('disabled', false).val('".$button_text."');
+						console.log('Phono ".$wid." is ready!')
+	        },
+					onUnready: function() {
+						console.log('Phono ".$wid." is NOT ready');
+						jQuery('#".$wid." .call-button').val('phone not ready');
+					}
+				});
 				
-				$('#".$wid." .call-button').click(function() {
-				  $('#".$wid." .call-button').attr('disabled', true).val('Busy');
+				jQuery('#".$wid." .call-button').click(function() {
+				  jQuery('#".$wid." .call-button').attr('disabled', true).val('Busy');
 				  calls['".$wid."'] = phonos['".$wid."'].phone.dial('".$connect_to."', {
 				    onRing: function() {
-				      $('#".$wid." .status').html('Ringing');
-							$('#".$wid." .call-controls input').attr('disabled',true);
-							$('#".$wid." .hangup-button').attr('disabled',false);
-							$('#".$wid." .call-controls').show().fadeIn();
+				      jQuery('#".$wid." .status').html('Ringing');
+							jQuery('#".$wid." .call-controls input').attr('disabled',true);
+							jQuery('#".$wid." .hangup-button').attr('disabled',false);
+							jQuery('#".$wid." .call-controls').show().fadeIn();
 				    },
 				    onAnswer: function() {
-				      $('#".$wid." .status').html('Answered').show().fadeIn();
-							$('#".$wid." .call-controls input').attr('disabled',false);
+				      jQuery('#".$wid." .status').html('Answered').show().fadeIn();
+							jQuery('#".$wid." .call-controls input').attr('disabled',false);
 				    },
 				    onHangup: function() {
-		          $('#".$wid." .call-button').attr('disabled', false).val('".$button_text."');
-				      $('#".$wid." .status').html('Call has ended');
-							$('#".$wid." .call-controls input').attr('disabled',true);
-							$('#".$wid." .call-controls').fadeOut();
+		          jQuery('#".$wid." .call-button').attr('disabled', false).val('".$button_text."');
+				      jQuery('#".$wid." .status').html('Call has ended');
+							jQuery('#".$wid." .call-controls input').attr('disabled',true);
+							jQuery('#".$wid." .call-controls').fadeOut();
 				    }
 				  });
 				});
